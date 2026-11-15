@@ -1,0 +1,14 @@
+**
+!Dockerfile
+!package.json
+!server.mjs
+!lib/
+!lib/**
+!public/
+!public/**
+!mobile/
+!mobile/core.mjs
+!scripts/
+!scripts/create-social.mjs
+!scripts/create-admin.mjs
+/public/calligraphy.png

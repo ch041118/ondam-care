@@ -1,0 +1,12 @@
+import {networkInterfaces} from 'node:os';
+import {startWithVoice} from './start-with-voice.mjs';
+const candidates=Object.values(networkInterfaces()).flat().filter(i=>i.family==='IPv4'&&!i.internal&&/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(i.address)).map(i=>i.address);
+const ip=process.argv[2]||(candidates.length===1?candidates[0]:null);
+if(!ip||!candidates.includes(ip))throw Error('사용할 Wi-Fi IP를 지정해 주세요: npm run start:lan -- '+candidates.join(' 또는 '));
+if(process.env.NODE_ENV==='production'||process.env.PUBLIC_ORIGIN)throw Error('운영 HTTPS 설정과 LAN 시연을 동시에 실행할 수 없습니다.');
+process.env.HOST=ip;
+process.env.LAN_ORIGIN=`http://${ip}:${process.env.PORT||3000}`;
+process.env.TRUST_PROXY='false';
+console.log('같은 Wi-Fi 접속 주소: '+process.env.LAN_ORIGIN+'/app/');
+console.log('HTTP LAN 시연에서는 브라우저 마이크 녹음이 제한됩니다.');
+await startWithVoice(process.cwd());

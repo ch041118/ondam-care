@@ -1,0 +1,22 @@
+[
+ {"name":"정상 평일 희망 시간","at":"2026-09-30T10:00:00+09:00"},
+ {"name":"지원하지 않는 서비스","request":{"service":"병원 동행"},"none":true},
+ {"name":"검증 전 보호사 위치","caregiver":{"locationVerified":false},"none":true},
+ {"name":"검증 전 어르신 위치","elder":{"locationVerified":false},"none":true},
+ {"name":"5km 밖 보호사","caregiver":{"lat":38},"none":true},
+ {"name":"근무하지 않는 요일","caregiver":{"days":[]},"none":true},
+ {"name":"퇴근 직전 요청은 다음 날","request":{"requestedAt":"2026-09-30T17:30:00+09:00"},"at":"2026-10-01T09:00:00+09:00"},
+ {"name":"15분 단위로 올림","request":{"requestedAt":"2026-09-30T10:01:00+09:00"},"at":"2026-09-30T10:15:00+09:00"},
+ {"name":"희망 시간 없는 요청은 가장 빠른 시간","request":{"requestedAt":null},"at":"2026-09-30T09:00:00+09:00"},
+ {"name":"정지된 계정","disabled":true,"none":true},
+ {"name":"계정 없는 보호사","noAccount":true,"none":true},
+ {"name":"확정 일정과 이동시간 확보","busy":true,"at":"2026-09-30T11:30:00+09:00"},
+ {"name":"불가 처리된 일정은 제외","busy":true,"busyStatus":"attention","at":"2026-09-30T10:00:00+09:00"},
+ {"name":"누락된 근무 시작시간","caregiver":{"from":null},"none":true},
+ {"name":"누락된 근무 종료시간","caregiver":{"to":null},"none":true},
+ {"name":"범위를 벗어난 좌표","elder":{"lat":91},"caregiver":{"lat":91},"none":true},
+ {"name":"음수 소요시간","request":{"duration":-60},"none":true},
+ {"name":"0분 소요시간","request":{"duration":0},"none":true},
+ {"name":"희망시간 확인 필요","request":{"timeNeedsReview":true},"none":true},
+ {"name":"요청내용 확인 필요","request":{"needsReview":true},"none":true}
+]

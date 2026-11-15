@@ -1,0 +1,10 @@
+import { build } from 'esbuild';
+import { readFile,writeFile,mkdir } from 'node:fs/promises';
+import { resolve } from 'node:path';
+const result=await build({entryPoints:['mobile/main.js'],define:{__CLOVER_PACKAGED__:'true'},bundle:true,write:false,format:'iife',target:['chrome109','safari16'],plugins:[{name:'expo-adapter',setup(b){b.onResolve({filter:/^(@capacitor\/|@capacitor-community\/|@capgo\/)/},()=>({path:resolve('expo/web-adapter.js')}));}}]});
+const script=result.outputFiles[0].text.replace(/<\/script/gi,'<\\/script');
+const css=await readFile('public/style.css','utf8');
+const html=(await readFile('public/index.html','utf8')).replace('<link rel="stylesheet" href="/style.css">',`<style>${css}</style>`).replace('<script type="module" src="/app.js"></script>',`<script>${script}</script>`);
+await mkdir('expo/generated',{recursive:true});
+await writeFile('expo/generated/app.json',JSON.stringify({html}));
+console.log('Expo Go shared UI prepared (bundled locally; no web server required).');

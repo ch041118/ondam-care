@@ -1,0 +1,112 @@
+[
+  {
+    "text": "내일 오후 두시에 밥 좀 차려줘",
+    "service": "식사 도움",
+    "review": false
+  },
+  {
+    "text": "내일 오전 아홉시 병원에 같이 가주세요",
+    "service": "병원 동행",
+    "review": false
+  },
+  {
+    "text": "방 청소 좀 도와줘",
+    "service": "생활 도움",
+    "review": false
+  },
+  {
+    "text": "장보러 가야 하는데 도와줘",
+    "service": "생활 도움",
+    "review": false
+  },
+  {
+    "text": "내일 오후 네시에 산책 같이 가자",
+    "service": "외출 동행",
+    "review": false
+  },
+  {
+    "text": "내일 두시쯤에 밥먹자",
+    "service": "식사 도움",
+    "review": true
+  },
+  {
+    "text": "주사 좀 놔줘",
+    "review": true
+  },
+  {
+    "text": "숨이 안 쉬어져 도와줘",
+    "review": true
+  },
+  {
+    "text": "병원 예약이 내일 오전 아홉시야 시간 바꾸면 안돼",
+    "service": "병원 동행",
+    "review": true
+  },
+  {
+    "text": "밥 먹고 병원도 같이 가줘",
+    "review": true
+  },
+  {
+    "text": "청소는 안 해도 되고 밥만 차려줘",
+    "service": "식사 도움",
+    "review": false
+  },
+  {
+    "text": "무슨 도움이 필요한지 모르겠어",
+    "review": true
+  },
+  {
+    "text": "내일 정오에 반찬 좀 만들어주세요",
+    "service": "식사 도움",
+    "review": false
+  },
+  {
+    "text": "모레 09:30에 진료 같이 가주세요",
+    "service": "병원 동행",
+    "review": false
+  },
+  {
+    "text": "오후 두시 말고 와주세요",
+    "review": true
+  },
+  {
+    "text": "내일 오후 세시에 빨래를 도와주세요",
+    "service": "생활 도움",
+    "review": false
+  },
+  {
+    "text": "밥은 안 해도 되고 청소만 해줘",
+    "service": "생활 도움",
+    "review": false
+  },
+  {
+    "text": "병원 말고 산책하고 싶어",
+    "service": "외출 동행",
+    "review": false
+  },
+  {
+    "text": "청소랑 반찬 준비를 같이 해줘",
+    "review": true
+  },
+  {
+    "text": "가슴이 아프고 숨쉬기가 힘들어요",
+    "review": true
+  },
+  {
+    "text": "넘어졌는데 일어나기 어려워요",
+    "review": true
+  },
+  {
+    "text": "수액을 놔주세요",
+    "review": true
+  },
+  {
+    "text": "병원 가기 싫어요",
+    "review": true
+  },
+  {
+    "text": "장 보러 같이 가주세요",
+    "service": "생활 도움",
+    "review": false
+  }
+]

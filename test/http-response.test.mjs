@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {apiHeaders,readApiResponse,parseApiBody,voicePayload} from '../public/http-response.js';
+import {decodeNativeAudio} from '../lib/voice-input.mjs';
+test('API: 모든 요청에 JSON 응답과 ngrok 안내 생략을 지정한다',()=>{const headers=apiHeaders({'Content-Type':'audio/mp4',Authorization:'Bearer test'});assert.equal(headers.Accept,'application/json');assert.equal(headers['ngrok-skip-browser-warning'],'1');assert.equal(headers['Content-Type'],'audio/mp4');assert.equal(headers.Authorization,'Bearer test');});
+test('API: HTTP 200 HTML도 접수 성공으로 취급하지 않고 JSON 파싱 오류를 노출하지 않는다',async()=>{await assert.rejects(readApiResponse(new Response('<!DOCTYPE html><noscript>ERR_NGROK_6024</noscript>',{headers:{'Content-Type':'text/html'}})),e=>e.code==='TUNNEL_NOTICE'&&!e.message.includes('Unexpected token'));assert.throws(()=>parseApiBody('<!DOCTYPE html><p>bad gateway</p>',502,'application/json'),e=>e.code==='HTML_RESPONSE'&&e.status===502);});
+test('API: 빈 응답·깨진 JSON·잘못된 구조는 안전한 오류로 처리한다',()=>{for(const value of ['', '{broken', 'null', '[]', 'true'])assert.throws(()=>parseApiBody(value),e=>['INVALID_JSON','INVALID_RESPONSE'].includes(e.code));});
+test('API: 정상 응답과 인증 오류 JSON은 기존 호출자가 처리할 수 있게 보존한다',async()=>{assert.deepEqual(await readApiResponse(new Response('{"error":"로그인이 필요합니다."}',{status:401,headers:{'Content-Type':'application/json'}})),{error:'로그인이 필요합니다.'});assert.deepEqual(parseApiBody('{"id":"request-1"}'),{id:'request-1'});});
+test('음성 전송: Safari MP4·Chrome WebM을 JSON으로 보내도 오디오 바이트와 대상이 유지된다',async()=>{const bytes=Uint8Array.from({length:50000},(_,i)=>i%256);for(const type of ['audio/mp4;codecs=mp4a.40.2','audio/webm;codecs=opus']){const body=await voicePayload(new Blob([bytes],{type}),'elder-1','checkin-1');assert.equal(body.elderId,'elder-1');assert.equal(body.checkinId,'checkin-1');assert.deepEqual(decodeNativeAudio(body),Buffer.from(bytes));}});

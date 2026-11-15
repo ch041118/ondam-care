@@ -1,0 +1,18 @@
+[
+ {"text":"네, 괜찮아요!","outcome":"okay"},
+ {"text":"잘 지내고 있어요.","outcome":"okay"},
+ {"text":"저는 괜찮아요","outcome":"okay"},
+ {"text":"괜찮습니다","outcome":"okay"},
+ {"text":"네","outcome":"okay"},
+ {"text":"아니요","outcome":"review"},
+ {"text":"안 괜찮아요","outcome":"review"},
+ {"text":"괜찮긴 한데 숨쉬기가 힘들어요","outcome":"review"},
+ {"text":"네, 넘어졌어요","outcome":"review"},
+ {"text":"밥을 못 먹었어요","outcome":"review"},
+ {"text":"잘 지냈는데 지금 아파요","outcome":"review"},
+ {"text":"누가 문을 두드려서 무서워요","outcome":"review"},
+ {"text":"도와주세요","outcome":"review"},
+ {"text":"...","outcome":"review"},
+ {"text":"","outcome":"review"},
+ {"text":"괜찮다고 말하면 안돼요","outcome":"review"}
+]

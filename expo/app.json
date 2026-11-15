@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "클로버",
+    "slug": "clover-care",
+    "version": "0.4.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "kr.clover.care"
+    },
+    "android": {
+      "package": "kr.clover.care"
+    },
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "돌봄 요청을 전달하기 위해 마이크를 사용합니다.",
+          "enableBackgroundRecording": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-secure-store",
+      "expo-notifications"
+    ]
+  }
+}

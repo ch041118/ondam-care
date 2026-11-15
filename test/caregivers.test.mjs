@@ -1,0 +1,16 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { saveCaregiver,validateHours } from '../lib/caregivers.mjs';
+import { available,match,localTime } from '../lib/scheduler.mjs';
+import { createDemoStore } from '../mobile/demo-store.mjs';
+const form=()=>({name:'새보호사',regionId:'yeonnam',from:9.5,to:17.75,days:[1,2,3,4,5],services:['생활 도움']});
+const db=()=>({caregivers:[],requests:[],elders:[{id:'e',lat:37.5668,lng:126.919}]});
+test('가입: 지역·요일·15분 단위 시간이 저장되고 배정에 적용된다',async()=>{const d=db(),c=await saveCaregiver(d,form(),{demo:true});assert.equal(c.from,9.5);const now=localTime('2026-09-28',8);const r=match(d,{id:'r',elderId:'e',service:'생활 도움',duration:60},now);assert.equal(r.start,localTime('2026-09-28',9.5));assert.equal(r.caregiverId,c.id);assert.equal(available(d,c,'e',localTime('2026-09-28',17),60),false);});
+test('가입: 빈 요일·역전 시간·잘못된 서비스·지역을 거부한다',async()=>{for(const patch of [{days:[]},{from:20,to:9},{from:9.1},{to:25},{services:[]},{regionId:'invalid'},{name:' '}])await assert.rejects(saveCaregiver(db(),{...form(),...patch},{demo:true}));});
+test('수정: 지역과 시간이 새 배정에 반영되고 기존 일정은 유지된다',async()=>{const d=db(),c=await saveCaregiver(d,form(),{demo:true});d.requests.push({id:'old',caregiverId:c.id,status:'confirmed',start:localTime('2026-09-28',10),duration:60});const before=structuredClone(d.requests);await saveCaregiver(d,{...form(),id:c.id,regionId:'gangnam',from:14,to:18},{demo:true});assert.equal(match(d,{id:'r',elderId:'e',service:'생활 도움',duration:60},localTime('2026-09-28',8)),null);assert.deepEqual(d.requests,before);assert.equal(c.from,14);});
+test('수정: 주소 조회 실패 시 기존 프로필이 보존된다',async()=>{const d=db(),c=await saveCaregiver(d,form(),{demo:true}),before=structuredClone(c);await assert.rejects(saveCaregiver(d,{...form(),id:c.id,address:'새 주소',from:13},{geocode:async()=>{throw Error('실패');}}));assert.deepEqual(c,before);});
+test('수정: 시간만 바꿀 때 동일 주소를 다시 조회하지 않는다',async()=>{const d=db(),c=await saveCaregiver(d,form(),{demo:true});await saveCaregiver(d,{...form(),id:c.id,address:c.address,from:12},{geocode:()=>{throw Error('불필요한 조회');}});assert.equal(c.from,12);});
+test('가입: 저장 후 앱을 다시 열어도 근무 조건을 유지한다',async()=>{let saved;let store=createDemoStore(null,async v=>{saved=v;});const c=await store.request('caregivers',form());store=createDemoStore(saved,async v=>{saved=v;});assert.equal((await store.request('state')).caregivers.find(x=>x.id===c.id).to,17.75);await store.request('caregivers',{...form(),id:c.id,regionId:'seogyo',days:[6,0],from:10});assert.deepEqual(saved.caregivers.find(x=>x.id===c.id).days,[0,6]);});
+test('수정: 레거시 시간 API도 빈 요일·잘못된 시간을 거부한다',()=>{assert.throws(()=>validateHours({from:9,to:18,days:[]}));assert.deepEqual(validateHours({from:0,to:24,days:[1,1]}),{from:0,to:24,days:[1]});});
+
+test('가입: 주소 확인 대기 중에도 시간을 수정할 수 있고 배정은 중지된다',async()=>{const d=db(),input={...form(),address:'확인 대기 주소'};const opts={geocode:async()=>({lat:null,lng:null,locationVerified:false})};const c=await saveCaregiver(d,input,opts);await saveCaregiver(d,{...input,id:c.id,from:12},opts);assert.equal(c.from,12);assert.equal(c.locationVerified,false);assert.equal(match(d,{id:'r',elderId:'e',service:'생활 도움',duration:60},localTime('2026-09-28',8)),null);});

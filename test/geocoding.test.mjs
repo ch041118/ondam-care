@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {geocode} from '../lib/integrations.mjs';
+test('Maps: 신규 주소·인증 헤더·좌표 검증 및 안전한 오류',async t=>{
+ const oldId=process.env.NAVER_CLIENT_ID,oldSecret=process.env.NAVER_CLIENT_SECRET;process.env.NAVER_CLIENT_ID='test-id';process.env.NAVER_CLIENT_SECRET='test-secret';
+ try{let status=200,addresses=[{x:'126.978',y:'37.566'}];t.mock.method(globalThis,'fetch',async(url,options)=>{assert.equal(new URL(url).origin,'https://maps.apigw.ntruss.com');assert.equal(options.headers.Accept,'application/json');assert.equal(options.headers['x-ncp-apigw-api-key'],'test-secret');return {ok:status===200,status,json:async()=>({addresses})};});assert.deepEqual(await geocode('서울특별시 중구 세종대로 110'),{lat:37.566,lng:126.978});for(const result of [{x:'',y:'37'}, {x:'bad',y:'37'},{x:127,y:91}]){addresses=[result];await assert.rejects(geocode('가상주소'),/위치/);}addresses=[];await assert.rejects(geocode('가상주소'),/도로명/);status=401;await assert.rejects(geocode('가상주소'),/인증/);status=429;await assert.rejects(geocode('가상주소'),/이용 한도/);
+ }finally{if(oldId===undefined)delete process.env.NAVER_CLIENT_ID;else process.env.NAVER_CLIENT_ID=oldId;if(oldSecret===undefined)delete process.env.NAVER_CLIENT_SECRET;else process.env.NAVER_CLIENT_SECRET=oldSecret;}
+});

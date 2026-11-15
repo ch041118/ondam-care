@@ -1,0 +1,10 @@
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {fixture,actors} from '../scripts/agent-eval-corpus.mjs';
+import {hashPassword} from '../lib/auth.mjs';
+import {ensureWellness,simulateCheckin,replyCheckin} from '../lib/wellness.mjs';
+const db=ensureWellness(fixture());db.accounts=[];db.checkins=[];db.attendance=[];db.wellnessOutbox=[];
+for(const [key,email]of [['admin','admin-full@example.test'],['socialA','social-full@example.test'],['socialB','outsider-full@example.test'],['carerA','carer-full@example.test'],['pending','pending-full@example.test']])db.accounts.push({...actors[key],email,passwordHash:await hashPassword('Full-web-test-2026!')});
+for(const org of ['a','b'])db.organizationWellness[org]={enabled:false,hour:19,minute:0,maxAttempts:3,intervalMinutes:5};
+const checkin=simulateCheckin(db,{elderId:'ea1'});replyCheckin(db,{id:checkin.id,elderId:'ea1',outcome:'review',text:'테스트: 담당자 확인 요청'});
+mkdirSync('tmp/full-feature-data',{recursive:true});writeFileSync('tmp/full-feature-data/state.json',JSON.stringify(db));
+console.log('Isolated full-feature fixture ready; real wellness/push delivery disabled.');

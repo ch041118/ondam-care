@@ -1,0 +1,12 @@
+{
+    admin off
+}
+
+{$CLOVER_DOMAIN} {
+    encode gzip
+    header -Server
+    reverse_proxy 127.0.0.1:{$PORT} {
+        header_up Host {$CLOVER_DOMAIN}
+        header_up X-Forwarded-For {remote_host}
+    }
+}
